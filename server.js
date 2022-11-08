@@ -133,5 +133,5 @@ async function addSupporter(address,tier,amount){
 }
 
 setInterval(
-    getTransfers,5000
+    getTransfers,600000
 )
