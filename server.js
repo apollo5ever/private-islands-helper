@@ -2,7 +2,9 @@ require('dotenv').config()
 const fetch = require('node-fetch-commonjs');
 const fs = require('fs');
 
-var lastHeight =parseInt(process.env.LAST_HEIGHT)
+
+var last_height = fs.readFileSync('./last_height.json');
+var lastHeight = JSON.parse(last_height).lastHeight;
 
 
 let auth = "Basic " + Buffer.from(`${process.env.LOGIN}:${process.env.PASS}`).toString('base64')
@@ -75,7 +77,7 @@ async function getHeight(){
     }).then(res=>res.json())
     .then((json)=>{
         lastHeight = json.result.height
-        fs.writeFile('.env',`LAST_HEIGHT=${lastHeight}`,(err) => {
+        fs.writeFile('last_height.json',`{"lastHeight":${lastHeight}}`,(err) => {
               if (err)
                 console.log(err);
               else {
