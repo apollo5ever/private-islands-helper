@@ -40,6 +40,7 @@ async function getTransfers(){
     }).then(res=>res.json())
     .then((json) => {
       if(json.result.entries){  
+        console.log(result.entries)
         for(var i=0;i<json.result.entries.length;i++){
             if(json.result.entries[i].dstport==1){
                 var address=""
