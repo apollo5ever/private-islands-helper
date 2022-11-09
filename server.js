@@ -129,7 +129,7 @@ async function addSupporter(address,tier,amount){
     fetch('http://127.0.0.1:10103/json_rpc',{
         method:'POST',
         body:addSupporterData,
-        headers:{'Content-Type':'application/json'}
+        headers:{'Authorization':auth,'Content-Type':'application/json'}
     })
 }
 
