@@ -3,6 +3,7 @@ const fetch = require('node-fetch-commonjs');
 const fs = require('fs');
 const addSupporter = require('./contract calls/addSupporter')
 const topUp = require('./contract calls/topUp')
+const checkSub = require('./daemon checks/checkSubscription')
 
 
 var last_height = fs.readFileSync('./last_height.json');
@@ -47,6 +48,7 @@ async function getTransfers(){
         console.log(result.entries)
         for(var i=0;i<json.result.entries.length;i++){
             if(json.result.entries[i].dstport==1){
+                //sub or top-up
                 var address=""
                 var tier=""
                 var amount = json.result.entries[i].amount
@@ -58,24 +60,12 @@ async function getTransfers(){
                     if(json.result.entries[i].payload_rpc[j].name=="tier"){
                         tier = json.result.entries[i].payload_rpc[j].value
                     }
+                }
+                if(checkSub(address,tier)){
+                    topUp(address,tier,amount,auth)
                 }
                 addSupporter(address,tier,amount,auth)
                 
-            }else if(json.result.entries[i].dstport==2){
-                //topup
-                var address=""
-                var tier=""
-                var amount = json.result.entries[i].amount
-                for(var j=0;j<json.result.entries[i].payload_rpc.length;j++){
-                    
-                    if(json.result.entries[i].payload_rpc[j].name=="address"){
-                       address=json.result.entries[i].payload_rpc[j].value
-                    }
-                    if(json.result.entries[i].payload_rpc[j].name=="tier"){
-                        tier = json.result.entries[i].payload_rpc[j].value
-                    }
-                }
-                topUp(address,tier,amount,auth)
             }else if(json.result.entries[i].dstport==3){
                 //fundraiser
             }else if(json.result.entries[i].dstport==4){
